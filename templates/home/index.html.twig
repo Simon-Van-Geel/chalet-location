@@ -1,20 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil - Chalet Gérardmer{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm text-center" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; color: white;">
+        <div class="container-fluid py-5">
+            <h1 class="display-4 fw-bold">Bienvenue au Chalet Gérardmer</h1>
+            <p class="col-md-8 fs-4 mx-auto">Profitez d'un séjour inoubliable au cœur des Vosges. Luxe, calme et nature.</p>
+            <button class="btn btn-success btn-lg mt-3" type="button">Voir nos disponibilités</button>
+        </div>
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="row align-items-md-stretch mb-5">
+        <div class="col-md-6">
+            <div class="h-100 p-5 text-bg-dark rounded-3">
+                <h2>L'esprit Montagne</h2>
+                <p>Découvrez notre chalet construit en bois massif, situé à deux pas du lac de Gérardmer. Idéal pour les familles et les groupes d'amis.</p>
+                <button class="btn btn-outline-light" type="button">En savoir plus</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="h-100 p-5 bg-light border rounded-3">
+                <h2>Services inclus</h2>
+                <p>Wifi haut débit, parking privé, linge de maison fourni et ménage de fin de séjour. Nous nous occupons de tout pour votre confort.</p>
+                <button class="btn btn-outline-secondary" type="button">Voir les services</button>
+            </div>
+        </div>
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/wamp64/www/symfony/chalet-location/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/wamp64/www/symfony/chalet-location/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+    <h2 class="pb-2 border-bottom mb-4">Nos Logements</h2>
+    <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <img src="https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=600&auto=format&fit=crop" class="card-img-top" alt="Rez-de-chaussée" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Le Rez-de-chaussée</h5>
+                    <p class="card-text">Un espace cosy de 80m² avec accès direct à la terrasse. Parfait pour 4 personnes.</p>
+                </div>
+                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold fs-5">120€ <small class="text-muted fw-normal">/ nuit</small></span>
+                    <a href="#" class="btn btn-sm btn-success">Réserver</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <img src="https://cdn.hometogo.net/assets/media/pics/1200_628/6373b95d874ac.jpg" class="card-img-top" alt="Étage" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title text-success">L'Étage Panoramique</h5>
+                    <p class="card-text">Vue imprenable sur la vallée. 3 chambres, grand salon cheminée. Capacité 6 personnes.</p>
+                </div>
+                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold fs-5">180€ <small class="text-muted fw-normal">/ nuit</small></span>
+                    <a href="#" class="btn btn-sm btn-success">Réserver</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

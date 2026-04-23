@@ -62,6 +62,18 @@
             "./bin/phpunit"
         ]
     },
+    "stripe/stripe-php": {
+        "version": "20.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "19.0",
+            "ref": "d6829c693e3927a8972c7671d74a1a5c505712b0"
+        },
+        "files": [
+            "./config/packages/stripe.yaml"
+        ]
+    },
     "symfony/asset-mapper": {
         "version": "7.4",
         "recipe": {
@@ -292,6 +304,18 @@
         },
         "files": [
             "./config/packages/ux_turbo.yaml"
+        ]
+    },
+    "symfony/ux-vue": {
+        "version": "2.35",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.9",
+            "ref": "8b87f5866b5af6728a58aaf7f5ba77e3816e35ed"
+        },
+        "files": [
+            "./assets/vue/controllers/Hello.vue"
         ]
     },
     "symfony/validator": {

@@ -3,58 +3,74 @@
 {% block title %}Accueil - Chalet Gérardmer{% endblock %}
 
 {% block body %}
-    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm text-center" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; color: white;">
-        <div class="container-fluid py-5">
-            <h1 class="display-4 fw-bold">Bienvenue au Chalet Gérardmer</h1>
-            <p class="col-md-8 fs-4 mx-auto">Profitez d'un séjour inoubliable au cœur des Vosges. Luxe, calme et nature.</p>
-            <button class="btn btn-success btn-lg mt-3" type="button">Voir nos disponibilités</button>
-        </div>
-    </div>
 
-    <div class="row align-items-md-stretch mb-5">
-        <div class="col-md-6">
-            <div class="h-100 p-5 text-bg-dark rounded-3">
-                <h2>L'esprit Montagne</h2>
-                <p>Découvrez notre chalet construit en bois massif, situé à deux pas du lac de Gérardmer. Idéal pour les familles et les groupes d'amis.</p>
-                <button class="btn btn-outline-light" type="button">En savoir plus</button>
-            </div>
+    <section class="position-relative d-flex align-items-center justify-content-center"
+             style="height: 80vh; background: linear-gradient(rgba(34, 58, 44, 0.4), rgba(34, 58, 44, 0.4)), url('{{ asset ('images/imageChalet1.png') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
+        <div class="text-center text-white px-3">
+            <p class="text-uppercase tracking-widest mb-2" style="letter-spacing: 3px; font-size: 0.9rem;">Massif des Vosges</p>
+            <h1 class="display-2 fw-normal mb-4" style="color: white;">Refuge Naturel.</h1>
+            <a href="#logements" class="btn btn-vosges mt-3">Découvrir le chalet</a>
         </div>
-        <div class="col-md-6">
-            <div class="h-100 p-5 bg-light border rounded-3">
-                <h2>Services inclus</h2>
-                <p>Wifi haut débit, parking privé, linge de maison fourni et ménage de fin de séjour. Nous nous occupons de tout pour votre confort.</p>
-                <button class="btn btn-outline-secondary" type="button">Voir les services</button>
-            </div>
-        </div>
-    </div>
+    </section>
 
-    <h2 class="pb-2 border-bottom mb-4">Nos Logements</h2>
-    <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=600&auto=format&fit=crop" class="card-img-top" alt="Rez-de-chaussée" style="height: 250px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title text-success">Le Rez-de-chaussée</h5>
-                    <p class="card-text">Un espace cosy de 80m² avec accès direct à la terrasse. Parfait pour 4 personnes.</p>
-                </div>
-                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
-                    <span class="fw-bold fs-5">120€ <small class="text-muted fw-normal">/ nuit</small></span>
-                    <a href="#" class="btn btn-sm btn-success">Réserver</a>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://cdn.hometogo.net/assets/media/pics/1200_628/6373b95d874ac.jpg" class="card-img-top" alt="Étage" style="height: 250px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title text-success">L'Étage Panoramique</h5>
-                    <p class="card-text">Vue imprenable sur la vallée. 3 chambres, grand salon cheminée. Capacité 6 personnes.</p>
-                </div>
-                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
-                    <span class="fw-bold fs-5">180€ <small class="text-muted fw-normal">/ nuit</small></span>
-                    <a href="#" class="btn btn-sm btn-success">Réserver</a>
+    <section class="container py-5 my-5 text-center" style="max-width: 800px;">
+        <h2 class="mb-4">L'Art de Vivre en Altitude</h2>
+        <p class="lead" style="line-height: 1.8;">
+            Découvrez notre chalet construit en bois massif, niché dans la forêt à deux pas du lac de Gérardmer.
+            Pensé pour les familles et les groupes d'amis, cet espace modulable vous offre luxe, calme et authenticité.
+        </p>
+    </section>
+
+    <section id="disponibilites" class="py-5 mt-5" style="background-color: var(--vosges-sapin); color: white;">
+        <div class="container text-center py-5">
+            <h2 class="mb-4" style="color: var(--vosges-brume);">Vérifier les disponibilités</h2>
+            <p class="mb-5" style="color: rgba(255,255,255,0.7);">Sélectionnez vos dates pour un devis instantané.</p>
+
+            <div {{ vue_component('BookingCalendar') }}
+                class="mx-auto"
+                style="max-width: 800px;">
+
+                <div class="text-center py-4">
+                    <div class="spinner-border text-light" role="status"></div>
+                    <p class="mt-2 text+-white-50">Chargement de l'outil de réservation...</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section id="logements" class="container py-5">
+        <div class="row g-5">
+            {% for floor in floors %}
+                <div class="col-md-6">
+                    <div class="card-logement">
+                        <div class="img-wrapper mb-4">
+                            <img src="https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800&auto=format&fit=crop"
+                                 class="img-fluid w-100"
+                                 alt="{{ floor.name }}"
+                                 style="height: 400px; object-fit: cover;">
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-baseline mb-2">
+                            <h3 class="mb-0">{{ floor.name }}</h3>
+                            <span class="fs-5" style="color: var(--vosges-bois); font-family: 'Playfair Display', serif;">{{ floor.basePrice }}€ <span class="fs-6 text-muted">/ nuit</span></span>
+                        </div>
+
+                        <p class="text-muted mb-4">{{ floor.description }}</p>
+
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                            <span class="text-uppercase text-muted" style="font-size: 0.8rem; letter-spacing: 1px;">
+                                <i class="bi bi-people me-2"></i>Jusqu'à {{ floor.capacity }} pers.
+                            </span>
+                            <a href="#" class="btn btn-vosges" style="padding: 8px 20px; font-size: 0.75rem;">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center">
+                    <p class="fs-4">Le catalogue est en cours de mise à jour.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
 {% endblock %}

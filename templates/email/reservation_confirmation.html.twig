@@ -1,0 +1,31 @@
+{# templates/emails/reservation_confirmation.html.twig #}
+{% extends 'email/layout.html.twig' %}
+
+{% block email_title %}Confirmation de réservation{% endblock %}
+
+{% block email_body %}
+    <h2 style="color: #223a2c; border-bottom: 1px solid #9c6f44; padding-bottom: 10px;">
+        Récapitulatif de votre demande
+    </h2>
+
+    <p>Bonjour <strong>{{ user.firstName }}</strong>,</p>
+    <p>Nous avons bien enregistré votre demande de séjour pour notre chalet à Gérardmer.</p>
+
+    <div style="background-color: #f9f9f9; border-left: 4px solid #9c6f44; padding: 15px; margin: 20px 0;">
+        <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+            <li style="margin-bottom: 8px;"><strong>Arrivée :</strong> {{ booking.startDate|date('d/m/Y') }}</li>
+            <li style="margin-bottom: 8px;"><strong>Départ :</strong> {{ booking.endDate|date('d/m/Y') }}</li>
+            <li style="margin-bottom: 8px;"><strong>Location :</strong> {{ floors_names|join(', ') }}</li>
+            <li style="margin-top: 15px; font-size: 18px; color: #9c6f44;">
+                <strong>Montant total : {{ totalPrice }} €</strong>
+            </li>
+        </ul>
+    </div>
+
+    <p>Le statut actuel de votre dossier est : <strong>{{ booking.status }}</strong>.</p>
+
+    <div style="text-align: center; margin-top: 30px;">
+        {# On redirige vers ton interface Vue.js Front-end #}
+        <a href="https://127.0.0.1:8000/mon-compte" class="btn-vosges">Voir mon espace client</a>
+    </div>
+{% endblock %}

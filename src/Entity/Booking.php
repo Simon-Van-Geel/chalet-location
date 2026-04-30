@@ -42,6 +42,12 @@ class Booking
     #[ORM\OneToMany(targetEntity: BookingItem::class, mappedBy: 'booking', orphanRemoval: true)]
     private Collection $bookingItems;
 
+    /**
+     * @var Collection<int, Payment>
+     */
+    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'booking')]
+    private Collection $payments;
+
     public function __construct()
     {
         // Initialise la date de prise de commande automatiquement
@@ -49,6 +55,7 @@ class Booking
         // Statut par défaut à la création
         $this->status = 'EN_ATTENTE';
         $this->bookingItems = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,6 +159,36 @@ class Booking
             // set the owning side to null (unless already changed)
             if ($bookingItem->getBooking() === $this) {
                 $bookingItem->setBooking(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payment>
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): static
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments->add($payment);
+            $payment->setBooking($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): static
+    {
+        if ($this->payments->removeElement($payment)) {
+            // set the owning side to null (unless already changed)
+            if ($payment->getBooking() === $this) {
+                $payment->setBooking(null);
             }
         }
 

@@ -8,7 +8,7 @@
              style="height: 80vh; background: linear-gradient(rgba(34, 58, 44, 0.4), rgba(34, 58, 44, 0.4)), url('{{ asset ('images/imageChalet1.png') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
         <div class="text-center text-white px-3">
             <p class="text-uppercase tracking-widest mb-2" style="letter-spacing: 3px; font-size: 0.9rem;">Massif des Vosges</p>
-            <h1 class="display-2 fw-normal mb-4" style="color: white;">Refuge Naturel.</h1>
+            <h1 class="display-2 fw-normal mb-4" style="color: white;">Refuge Naturel</h1>
             <a href="#logements" class="btn btn-vosges mt-3">Découvrir le chalet</a>
         </div>
     </section>
@@ -19,6 +19,30 @@
             Découvrez notre chalet construit en bois massif, niché dans la forêt à deux pas du lac de Gérardmer.
             Pensé pour les familles et les groupes d'amis, cet espace modulable vous offre luxe, calme et authenticité.
         </p>
+    </section>
+
+    <section class="container my-5">
+        <h2 class="text-center mb-4" style="color: var(--vosges-sapin);">Découvrez le chalet en images</h2>
+
+        <div class="row g-4 justify-content-center">
+            {# On boucle sur le tableau d'images envoyé par le contrôleur #}
+            {% for image in images %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        {# On utilise asset() pour générer le bon chemin vers le dossier public #}
+                        <img src="{{ asset('uploads/gallery/' ~ image.fileName) }}"
+                             alt="{{ image.altText }}"
+                             class="card-img-top rounded"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                </div>
+            {% else %}
+                {# Ce message s'affiche automatiquement si le tableau d'images est vide #}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Les photos du chalet arrivent très bientôt !</p>
+                </div>
+            {% endfor %}
+        </div>
     </section>
 
     <section id="disponibilites" class="py-5 mt-5" style="background-color: var(--vosges-sapin); color: white;">

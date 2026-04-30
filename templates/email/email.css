@@ -1,0 +1,29 @@
+/* templates/emails/email.css */
+body {
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
+    background-color: #f5f4f0; /* --vosges-brume */
+    color: #4a4a4a; /* --vosges-roche */
+    margin: 0; padding: 0;
+}
+.wrapper { background-color: #f5f4f0; padding: 20px; }
+.container {
+    max-width: 600px; margin: 0 auto; background-color: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.header {
+    background-color: #223a2c; /* --vosges-sapin */
+    padding: 30px; text-align: center;
+}
+.header h1 {
+    font-family: 'Playfair Display', Georgia, serif; color: #ffffff;
+    margin: 0; font-size: 24px;
+}
+.content { padding: 30px; line-height: 1.6; }
+.footer {
+    padding: 20px; text-align: center; font-size: 12px; color: #6c757d;
+}
+.btn-vosges {
+    display: inline-block; background-color: #9c6f44; /* --vosges-bois */
+    color: #ffffff !important; padding: 12px 20px; text-decoration: none;
+    text-transform: uppercase; font-size: 13px; letter-spacing: 1px;
+}

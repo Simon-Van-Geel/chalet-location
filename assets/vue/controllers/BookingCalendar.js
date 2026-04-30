@@ -11,12 +11,14 @@ export default defineComponent({
     setup() {
         const floors = ref([]);
         const bookings = ref([]);
-        const seasons = ref([]); // NOUVEAU : Stockage des saisons
+        const seasons = ref([]);
         const isLoading = ref(true);
         const selectedFloor = ref(null);
         const dateRange = ref(null);
 
-        // Création des formules (RDC, 1er, Complet)
+        // NOUVEAU : Variable pour vérifier si le client a accepté le règlement
+        const cgvAccepted = ref(false);
+
         const displayFloors = computed(() => {
             if (!floors.value.length) return [];
             let list = [...floors.value];
@@ -25,7 +27,6 @@ export default defineComponent({
             return list;
         });
 
-        // Calcul des dates bloquées
         const disabledDates = computed(() => {
             if (!selectedFloor.value) return [];
             let blocked = [];
@@ -43,7 +44,6 @@ export default defineComponent({
             return blocked;
         });
 
-        // NOUVEAU : Calcul dynamique du prix total avec multiplicateur de saison
         const totalPrice = computed(() => {
             if (!dateRange.value || dateRange.value.length !== 2 || !selectedFloor.value) return 0;
 
@@ -51,37 +51,38 @@ export default defineComponent({
             const end = new Date(dateRange.value[1]);
             let total = 0;
 
-            // On récupère le prix de base de la formule sélectionnée
             const formula = displayFloors.value.find(f => f.id === selectedFloor.value);
             if (!formula) return 0;
 
             const basePricePerNight = formula.basePrice;
 
-            // Boucle : On calcule le prix pour CHAQUE nuit
             for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-
-                // On cherche si ce jour précis tombe dans une saison spéciale
                 const currentSeason = seasons.value.find(s => {
                     const seasonStart = new Date(s.startDate);
                     const seasonEnd = new Date(s.endDate);
                     return d >= seasonStart && d <= seasonEnd;
                 });
-
-                // Si on trouve une saison, on prend son multiplicateur (ex: 1.5). Sinon, c'est 1.0 (Prix normal).
-                // On utilise seasonPrice car c'est le nom de ta colonne en base de données.
                 const modifier = currentSeason ? currentSeason.seasonPrice : 1.0;
-
-                // On additionne le prix de la nuit avec le multiplicateur
                 total += (basePricePerNight * modifier);
             }
 
             return total;
         });
 
+        // NOUVEAU : Calcul visuel de l'acompte (30%)
+        const acomptePrice = computed(() => {
+            return (totalPrice.value * 0.30).toFixed(2);
+        });
+
         const submitBooking = async () => {
+            // Sécurité supplémentaire : on vérifie que la case est cochée
+            if (!cgvAccepted.value) {
+                alert("Veuillez accepter le règlement intérieur pour continuer.");
+                return;
+            }
+
             if (!dateRange.value || dateRange.value.length !== 2) return;
 
-            // ... (Le début de ta fonction reste identique : formatage des dates et des IDs d'étages)
             const startDate = dateRange.value[0].toISOString().split('T')[0];
             const endDate = dateRange.value[1].toISOString().split('T')[0];
 
@@ -93,7 +94,6 @@ export default defineComponent({
             }
 
             try {
-                // On met un petit feedback visuel pour rassurer le client pendant le chargement Stripe
                 const btn = document.querySelector('.btn-vosges');
                 if (btn) btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Redirection vers le paiement...';
 
@@ -110,18 +110,14 @@ export default defineComponent({
                 const result = await response.json();
 
                 if (response.ok) {
-                    // 🔥 LA MODIFICATION EST ICI 🔥
-                    // On vérifie si Symfony nous a bien renvoyé l'URL Stripe
                     if (result.url) {
-                        // On redirige le navigateur du client vers la page de paiement Stripe
                         window.location.href = result.url;
                     } else {
-                        // Sécurité au cas où il n'y a pas d'URL
-                        alert("Réservation confirmée, mais erreur de redirection vers le paiement.");
+                        alert("Réservation initiée, mais erreur de redirection Stripe.");
                         window.location.reload();
                     }
                 } else {
-                    if (btn) btn.innerHTML = 'Réserver maintenant'; // On remet le bouton normal
+                    if (btn) btn.innerHTML = "Payer l'acompte et Réserver";
                     alert("Erreur : " + (result.error || "Une erreur est survenue."));
                 }
             } catch (error) {
@@ -146,7 +142,7 @@ export default defineComponent({
             }
         });
 
-        return { floors, bookings, seasons, isLoading, selectedFloor, dateRange, displayFloors, disabledDates, totalPrice, fr, submitBooking };
+        return { floors, bookings, seasons, isLoading, selectedFloor, dateRange, displayFloors, disabledDates, totalPrice, acomptePrice, cgvAccepted, fr, submitBooking };
     },
 
     template: `
@@ -189,13 +185,39 @@ export default defineComponent({
                         </div>
                     </div>
 
-                    <div v-if="dateRange && dateRange.length === 2" class="mt-4 p-4 border rounded bg-white shadow-sm text-center">
-                        <h5 class="text-muted mb-2">Montant total de votre séjour</h5>
-                        <h2 class="fw-bold mb-3" style="color: var(--vosges-bois);">{{ totalPrice }} €</h2>
+                    <div v-if="dateRange && dateRange.length === 2" class="mt-5 p-4 p-md-5 bg-white text-center" style="border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
 
-                        <button @click="submitBooking" class="btn btn-vosges shadow-sm fs-5 px-5 py-3 w-100 w-md-auto">
-                            Réserver maintenant
+                        <!-- Ligne des prix revisitée -->
+                        <p class="text-uppercase mb-2" style="font-size: 0.85rem; letter-spacing: 1px; color: var(--vosges-roche);">
+                            Montant total du séjour : <span class="text-decoration-line-through opacity-75">{{ totalPrice }} €</span>
+                        </p>
+
+                        <h3 class="mb-4" style="color: var(--vosges-sapin); font-family: 'Playfair Display', serif;">
+                            Acompte à régler aujourd'hui : <span style="color: var(--vosges-bois);">{{ acomptePrice }} €</span>
+                        </h3>
+
+                        <!-- Petit séparateur élégant -->
+                        <hr style="border-color: var(--vosges-bois); opacity: 0.2; width: 50%; margin: 0 auto 2rem auto;">
+
+                        <!-- Case à cocher épurée -->
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="form-check text-start" style="max-width: 500px;">
+                                <!-- On force la bordure marron sur la case pour l'assortir au thème -->
+                                <input class="form-check-input shadow-none" type="checkbox" v-model="cgvAccepted" id="cgvCheck" style="cursor: pointer; border-color: var(--vosges-bois); margin-top: 0.35rem;">
+                                <label class="form-check-label" for="cgvCheck" style="cursor: pointer; font-size: 0.95rem; color: var(--vosges-roche);">
+                                    J'ai lu et j'accepte le <a href="/reglement" target="_blank" style="color: var(--vosges-bois); text-decoration: underline;">règlement intérieur</a> (capacité, non-fumeur, etc.) et les conditions d'annulation.
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Bouton avec gestion du style 'désactivé' pour garder le fond marron -->
+                        <button @click="submitBooking"
+                                :disabled="!cgvAccepted"
+                                class="btn btn-vosges px-5 py-3"
+                                :style="!cgvAccepted ? 'opacity: 0.4; cursor: not-allowed; filter: grayscale(30%);' : 'box-shadow: 0 4px 15px rgba(156, 111, 68, 0.3);'">
+                            Payer l'acompte et Réserver
                         </button>
+
                     </div>
                 </div>
                 <div v-else class="text-center p-5 mt-4 border rounded" style="border-color: rgba(0,0,0,0.1) !important; border-style: dashed !important;">
